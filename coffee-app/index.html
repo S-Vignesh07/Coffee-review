@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>☕ Great Coffee · Rating App</title>
+  <!-- Font Awesome (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      background: #f7f3ee;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .app-card {
+      max-width: 1200px;
+      width: 100%;
+      background: white;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.15);
+      padding: 2.5rem 2rem;
+      transition: all 0.2s;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #2d1b12;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0.15rem;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #b45f3a;
+      font-size: 2.4rem;
+    }
+
+    .subhead {
+      color: #6b4c3b;
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-top: -4px;
+      margin-bottom: 2.4rem;
+      border-left: 4px solid #d9b89c;
+      padding-left: 18px;
+      background: #fcf8f5;
+      border-radius: 0 12px 12px 0;
+      width: fit-content;
+      padding: 8px 22px 8px 18px;
+    }
+
+    .coffee-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .coffee-item {
+      background: #fefcfb;
+      border-radius: 28px;
+      padding: 1.4rem 1.4rem 1.6rem;
+      box-shadow: 0 6px 18px rgba(90, 50, 30, 0.06);
+      border: 1px solid #f0e4db;
+      transition: transform 0.15s ease, box-shadow 0.2s, opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .coffee-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 28px -8px rgba(70, 40, 20, 0.12);
+      border-color: #dbc5b4;
+    }
+
+    .coffee-image {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 0.8rem;
+      background: #ede3db;
+      transition: transform 0.2s;
+    }
+
+    .coffee-item:hover .coffee-image {
+      transform: scale(1.01);
+    }
+
+    .coffee-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.4rem;
+      gap: 8px;
+    }
+
+    .coffee-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #2a1a10;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .vote-badge {
+      background: #e5d4c8;
+      padding: 0.25rem 0.9rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #3d281d;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .vote-badge i {
+      font-size: 0.7rem;
+      color: #a7582c;
+    }
+
+    .description {
+      color: #4d3729;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin: 0.4rem 0 1rem;
+      flex: 1;
+      padding-right: 4px;
+    }
+
+    .vote-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.2rem;
+      border-top: 1px solid #efe4db;
+      padding-top: 0.9rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .vote-btn {
+      background: #2d1b12;
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 4px 8px rgba(45, 27, 18, 0.1);
+      letter-spacing: 0.3px;
+    }
+
+    .vote-btn i {
+      font-size: 0.9rem;
+      color: #e7c9b6;
+    }
+
+    .vote-btn:hover {
+      background: #3f281c;
+      transform: scale(1.02);
+    }
+
+    .vote-btn:active {
+      transform: scale(0.96);
+      background: #1f120b;
+    }
+
+    .vote-count-display {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #2d1b12;
+      background: #f5ede7;
+      padding: 0.25rem 1rem;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vote-count-display i {
+      color: #b45f3a;
+      font-size: 0.8rem;
+    }
+
+    /* remove button */
+    .remove-btn {
+      background: transparent;
+      border: 1px solid #e5d4c8;
+      color: #7a5a47;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.9rem;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      margin-top: 0.2rem;
+      align-self: flex-start;
+    }
+
+    .remove-btn:hover {
+      background: #fce9df;
+      border-color: #b45f3a;
+      color: #2d1b12;
+    }
+
+    .remove-btn i {
+      font-size: 0.7rem;
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      font-size: 0.9rem;
+      color: #7b6252;
+      border-top: 1px solid #e6d7cc;
+      padding-top: 1.8rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-note i {
+      color: #b45f3a;
+      margin-right: 4px;
+    }
+
+    .db-badge {
+      background: #e9ddd4;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #2f1e14;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #7b6252;
+      font-size: 1.1rem;
+      background: #fcf8f5;
+      border-radius: 40px;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 1rem;
+      color: #d9b89c;
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .app-card {
+        padding: 1.5rem 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .coffee-grid {
+        grid-template-columns: 1fr;
+      }
+      .vote-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+      .coffee-image {
+        height: 140px;
+      }
+    }
+
+    .vote-bump {
+      animation: bump 0.2s ease;
+    }
+    @keyframes bump {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+  </style>
+</head>
+<body>
+<div class="app-card" id="app">
+  <h1>
+    <i class="fas fa-mug-hot"></i> The Great Coffee
+    <span style="font-size: 1.2rem; font-weight: 400; margin-left: auto; color: #8f6e59;">Rating</span>
+  </h1>
+  <div class="subhead">
+    <i class="fas fa-thumbs-up" style="margin-right: 10px;"></i> 
+    vote, remove &amp; enjoy — each action updates the database
+  </div>
+
+  <div class="coffee-grid" id="coffeeGrid"></div>
+
+  <div class="footer-note">
+    <span><i class="fas fa-database"></i> Persistent storage · images &amp; remove</span>
+    <span class="db-badge"><i class="fas fa-check-circle"></i> task3 · enhanced</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- "Database" (localStorage) ----------
+    const STORAGE_KEY = 'great_coffee_ratings_v2';
+
+    // image mapping (free stock-style images)
+    const IMAGE_MAP = {
+      'Ethiopian Yirgacheffe': 'https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a?w=400&h=300&fit=crop&auto=format',
+      'Sumatra Mandheling': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=300&fit=crop&auto=format',
+      'Cold Brew Nitro': 'https://i2.wp.com/bakingmischief.com/wp-content/uploads/2022/03/coffee-milkshake-image-684x1024.jpg',
+      'Vanilla Latte': 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=300&fit=crop&auto=format',
+      'Mexican Chiapas': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop&auto=format',
+      'Cold Brew': 'https://thfvnext.bing.com/th/id/OSK.6f1baa3e21093bb3e7c7b095d8dd751e?w=424&h=424&c=7&rs=1&qlt=90&o=6&pid=16.1',
+      'Pava ator': 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=300&fit=crop&auto=format'
+    };
+
+    // fallback image
+    const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop&auto=format';
+
+    const DEFAULT_COFFEES = [
+      { id: 'yirgacheffe', name: 'Ethiopian Yirgacheffe', votes: 125, description: 'Rich, sweet, and aromatic — a must-try for any coffee lover.' },
+      { id: 'sumatra', name: 'Sumatra Mandheling', votes: 150, description: 'Grown in the mountains of Sumatra, full-bodied and earthy.' },
+      { id: 'coldbrew_nitro', name: 'Cold Brew Nitro', votes: 120, description: 'Bold coffee with a refreshing, soda-like fizz.' },
+      { id: 'vanilla_latte', name: 'Vanilla Latte', votes: 125, description: 'Classic creamy coffee with a touch of sweet vanilla.' },
+      { id: 'chiapas', name: 'Mexican Chiapas', votes: 120, description: 'Smooth with notes of chocolate and a hint of sweetness.' },
+      { id: 'coldbrew', name: 'Cold Brew', votes: 50, description: 'Smooth, bold, and refreshingly cold.' },
+      { id: 'pava_ator', name: 'Pava ator', votes: 50, description: 'Unique blend with a rich, bold character.' }
+    ];
+
+    function loadCoffeeData() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        } catch (e) { /* ignore */ }
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_COFFEES));
+      return DEFAULT_COFFEES;
+    }
+
+    function saveCoffeeData(coffees) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(coffees));
+    }
+
+    // ---------- render ----------
+    const grid = document.getElementById('coffeeGrid');
+
+    function renderCoffees(coffeeArray) {
+      grid.innerHTML = '';
+
+      if (!coffeeArray || coffeeArray.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.innerHTML = `<i class="fas fa-mug-empty"></i> No coffees left!<br><span style="font-size:0.9rem;">Reload to reset the list.</span>`;
+        grid.appendChild(empty);
+        return;
+      }
+
+      coffeeArray.forEach((coffee, index) => {
+        const item = document.createElement('div');
+        item.className = 'coffee-item';
+        item.dataset.id = coffee.id;
+
+        // image
+        const img = document.createElement('img');
+        img.className = 'coffee-image';
+        img.src = IMAGE_MAP[coffee.name] || FALLBACK_IMAGE;
+        img.alt = coffee.name;
+        img.loading = 'lazy';
+
+        // header
+        const header = document.createElement('div');
+        header.className = 'coffee-header';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'coffee-name';
+        nameSpan.textContent = coffee.name;
+
+        const badge = document.createElement('span');
+        badge.className = 'vote-badge';
+        badge.innerHTML = `<i class="fas fa-arrow-up"></i> ${coffee.votes}`;
+
+        header.appendChild(nameSpan);
+        header.appendChild(badge);
+
+        // description
+        const desc = document.createElement('div');
+        desc.className = 'description';
+        desc.textContent = coffee.description;
+
+        // action row: vote + count + remove
+        const action = document.createElement('div');
+        action.className = 'vote-action';
+
+        const voteBtn = document.createElement('button');
+        voteBtn.className = 'vote-btn';
+        voteBtn.innerHTML = `<i class="fas fa-coffee"></i> Vote +1`;
+
+        const voteDisplay = document.createElement('span');
+        voteDisplay.className = 'vote-count-display';
+        voteDisplay.innerHTML = `<i class="fas fa-heart"></i> ${coffee.votes}`;
+
+        // remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Remove`;
+
+        action.appendChild(voteBtn);
+        action.appendChild(voteDisplay);
+        action.appendChild(removeBtn);
+
+        item.appendChild(img);
+        item.appendChild(header);
+        item.appendChild(desc);
+        item.appendChild(action);
+
+        // ----- VOTE logic -----
+        voteBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const currentData = loadCoffeeData();
+          const target = currentData.find(c => c.id === coffee.id);
+          if (target) {
+            target.votes += 1;
+            saveCoffeeData(currentData);
+            coffee.votes = target.votes;
+
+            badge.innerHTML = `<i class="fas fa-arrow-up"></i> ${target.votes}`;
+            voteDisplay.innerHTML = `<i class="fas fa-heart"></i> ${target.votes}`;
+            voteDisplay.classList.remove('vote-bump');
+            void voteDisplay.offsetWidth;
+            voteDisplay.classList.add('vote-bump');
+          } else {
+            renderCoffees(loadCoffeeData());
+          }
+        });
+
+        // ----- REMOVE logic -----
+        removeBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          // fade out then remove
+          item.classList.add('fade-out');
+          setTimeout(() => {
+            let currentData = loadCoffeeData();
+            const filtered = currentData.filter(c => c.id !== coffee.id);
+            saveCoffeeData(filtered);
+            // update the local coffeeArray reference
+            const updated = loadCoffeeData();
+            renderCoffees(updated);
+          }, 280);
+        });
+
+        grid.appendChild(item);
+      });
+    }
+
+    // ---------- initial load ----------
+    let coffeeData = loadCoffeeData();
+    renderCoffees(coffeeData);
+
+    // expose reset for convenience
+    window.__coffeeDB = {
+      load: loadCoffeeData,
+      save: saveCoffeeData,
+      reset: function() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_COFFEES));
+        renderCoffees(loadCoffeeData());
+      }
+    };
+  })();
+</script>
+</body>
+</html>
